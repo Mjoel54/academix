@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require(".");
+const connection_1 = require("../db/connection");
 require("dotenv").config();
 const courseSeeds = [
     {
@@ -33,8 +33,8 @@ const courseSeeds = [
 ];
 const seed = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield _1.db.createCollection("courses");
-        const seedCourses = yield _1.db.collection("courses").insertMany(courseSeeds);
+        yield connection_1.db.createCollection("courses");
+        const seedCourses = yield connection_1.db.collection("courses").insertMany(courseSeeds);
         console.log("Database seeded 🌱");
         return { seedMsg: seedCourses };
     }
