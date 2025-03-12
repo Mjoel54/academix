@@ -16,7 +16,7 @@
     "dev": "nodemon ./src/index.ts",
     "start": "node ./build/index.js",
     "build": "npm install && tsc -p .",
-    "seed": "node ./build/api/db/seed.js",
+    "seed": "node ./build/seeds/seed.js",
     "serve-dev": "nodemon ./src/index.ts",
     "test": "jest"
   },

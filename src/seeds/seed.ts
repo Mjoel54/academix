@@ -1,4 +1,4 @@
-import { db } from ".";
+import { db } from "../db/connection";
 require("dotenv").config();
 
 const courseSeeds = [
