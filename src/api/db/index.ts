@@ -1,6 +1,6 @@
 import { Schema, model, connect } from "mongoose";
 import { MongoClient } from "mongodb";
-import { userInfo } from "os";
+// import { userInfo } from "os";
 require("dotenv").config();
 
 interface IPost {
@@ -16,7 +16,7 @@ const postSchema = new Schema<IPost>({
 const Post = model<IPost>("Post", postSchema);
 
 export const client = new MongoClient(process.env.MONGO_URI!);
-export const db = client.db("node-ts-api");
+export const db = client.db("academix-ts-api");
 
 const connectToMongoDb = async (): Promise<object> => {
   try {

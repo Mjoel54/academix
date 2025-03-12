@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = exports.client = void 0;
 const mongoose_1 = require("mongoose");
 const mongodb_1 = require("mongodb");
+// import { userInfo } from "os";
 require("dotenv").config();
 const postSchema = new mongoose_1.Schema({
     content: { type: String, required: true },
@@ -19,7 +20,7 @@ const postSchema = new mongoose_1.Schema({
 });
 const Post = (0, mongoose_1.model)("Post", postSchema);
 exports.client = new mongodb_1.MongoClient(process.env.MONGO_URI);
-exports.db = exports.client.db("node-ts-api");
+exports.db = exports.client.db("academix-ts-api");
 const connectToMongoDb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, mongoose_1.connect)(process.env.MONGO_URI);
