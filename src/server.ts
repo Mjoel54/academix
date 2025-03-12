@@ -24,9 +24,9 @@ app.get("/", (req: Request, res: Response): void => {
   }
 });
 
-app.get("/item/all", async (req: Request, res: Response): Promise<void> => {
+app.get("/courses/all", async (req: Request, res: Response): Promise<void> => {
   try {
-    const allItems = await db.collection("posts").find().toArray();
+    const allItems = await db.collection("courses").find().toArray();
     res.json({ docs: allItems });
   } catch (x) {
     console.error(x);
@@ -50,6 +50,7 @@ app.get("/item/:id", async (req: Request, res: Response): Promise<void> => {
 
 app.listen(process.env.PORT || PORT, (): void => {
   console.log("And we're rolling! 🎥");
+  console.log(`API server is live at http://localhost:${PORT}`);
 });
 
 export default app;

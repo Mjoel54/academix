@@ -14,26 +14,15 @@ const mongoose_1 = require("mongoose");
 const mongodb_1 = require("mongodb");
 // import { userInfo } from "os";
 require("dotenv").config();
-// interface IPost {
-//   content: string;
-//   author: string;
-// }
-// const postSchema = new Schema<IPost>({
-//   content: { type: String, required: true },
-//   author: { type: String, required: true },
-// });
-// const Post = model<IPost>("Post", postSchema);
 exports.client = new mongodb_1.MongoClient(process.env.MONGO_URI);
+const MONGO_URI = process.env.MONGO_URI;
+if (!exports.client) {
+    throw new Error("MongoDB URI is missing");
+}
 exports.db = exports.client.db("academix-ts-api");
 const connectToMongoDb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield (0, mongoose_1.connect)(process.env.MONGO_URI);
-        // const post = new Post({
-        //   content: "First post!",
-        //   author: "author0",
-        // });
-        // await post.save();
-        // console.log("post added")
+        yield (0, mongoose_1.connect)(MONGO_URI);
         return { status: 200, msg: "OK - Connected" };
     }
     catch (err) {

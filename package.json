@@ -13,11 +13,11 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "dev": "nodemon ./src/index.ts",
-    "start": "node ./build/index.js",
+    "dev": "nodemon ./src/server.ts",
+    "start": "node ./build/server.js",
     "build": "npm install && tsc -p .",
     "seed": "node ./build/seeds/seed.js",
-    "serve-dev": "nodemon ./src/index.ts",
+    "serve-dev": "nodemon ./src/server.ts",
     "test": "jest"
   },
   "devDependencies": {
