@@ -3,6 +3,7 @@ import cors from "cors";
 import { db } from "./db/connection";
 import connectToMongoDb from "./db/connection";
 import { ObjectId } from "mongodb";
+import Course from "./models/Course";
 
 require("dotenv").config();
 
@@ -16,7 +17,7 @@ connectToMongoDb();
 app.get("/", (req: Request, res: Response): void => {
   try {
     res.json({
-      msg: "It's workin'!",
+      msg: "It's working!",
     });
   } catch (x) {
     console.error(x);
@@ -24,7 +25,31 @@ app.get("/", (req: Request, res: Response): void => {
   }
 });
 
-app.get("/courses/all", async (req: Request, res: Response): Promise<void> => {
+app.get("/courses", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const courses = await Course.find();
+    res.json({ docs: courses });
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+    res.json({ error });
+  }
+});
+app.get("/courses/:id", async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const course = await Course.findById(id);
+    if (!course) {
+      res.status(404).json({ message: "Course not found" });
+      return;
+    }
+    res.json({ data: course });
+  } catch (error) {
+    console.error("Error fetching course:", error);
+    res.status(500).json({ error });
+  }
+});
+
+app.get("/item/all", async (req: Request, res: Response): Promise<void> => {
   try {
     const allItems = await db.collection("courses").find().toArray();
     res.json({ docs: allItems });

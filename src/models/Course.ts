@@ -7,7 +7,7 @@ export interface ICourse extends Document {
   teachers?: string[];
 }
 
-const roomSchema = new Schema<ICourse>({
+const courseSchema = new Schema<ICourse>({
   title: { type: String, required: true, trim: true, maxlength: 50 },
   assignments: { type: [String], required: false },
   students: { type: [String], required: false },
@@ -15,6 +15,6 @@ const roomSchema = new Schema<ICourse>({
 });
 
 // To use the schema definition, we need to convert roomSchema into a Model we can work with.
-const Course = model<ICourse>("Course", roomSchema);
+const Course = model<ICourse>("Course", courseSchema);
 
 export default Course;
