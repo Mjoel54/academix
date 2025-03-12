@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import connectToMongoDb, { db } from "./api/db/index";
+import { db } from "./db/connection";
+import connectToMongoDb from "./db/connection";
 import { ObjectId } from "mongodb";
 
 require("dotenv").config();
