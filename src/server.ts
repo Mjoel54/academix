@@ -1,23 +1,38 @@
-import express from "express";
-import cors from "cors";
+import app from "./app";
 import connectToMongoDb from "./db/connection";
-import routes from "./routes";
+import dotenv from "dotenv";
 
-require("dotenv").config();
+dotenv.config();
 
 const PORT = process.env.PORT || 3001;
-const app = express();
 
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(routes);
-
-connectToMongoDb();
-
-app.listen(process.env.PORT || PORT, (): void => {
-  console.log("And we're rolling! 🎥");
-  console.log(`API server is live at http://localhost:${PORT}`);
+process.on("SIGTERM", () => {
+  console.log("SIGTERM signal received: closing HTTP server");
+  process.exit(0);
 });
+
+process.on("SIGINT", () => {
+  console.log("SIGINT signal received: closing HTTP server");
+  process.exit(0);
+});
+
+const startServer = async () => {
+  try {
+    // Connect to MongoDB
+    await connectToMongoDb();
+    console.log("📦 Connected to MongoDB");
+
+    // Start Express server
+    app.listen(PORT, () => {
+      console.log("And we're rolling! 🎥");
+      console.log(`API server is live at http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 export default app;
