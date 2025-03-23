@@ -2,6 +2,21 @@
 
 A modern Learning Management System (LMS) API built with Express.js and MongoDB. The application provides a robust backend for managing educational resources including courses, assignments, students, and teachers.
 
+## Table of Contents
+
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+
+  - [Courses](#courses)
+  - [Assignments](#assignments)
+  - [Users](#users)
+
+- [Error Handling](#error-handling)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Tech Stack
 
 ### Backend Framework
@@ -61,6 +76,13 @@ npm run dev
 
 Retrieve all courses.
 
+Query Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| page | number | No | Page number for pagination (default: 1) |
+| limit | number | No | Number of items per page (default: 10) |
+| instructor | string | No | Filter courses by instructor ID |
+
 Response:
 
 ```json
@@ -75,7 +97,12 @@ Response:
       "createdAt": "date",
       "updatedAt": "date"
     }
-  ]
+  ],
+  "pagination": {
+    "total": "number",
+    "page": "number",
+    "pages": "number"
+  }
 }
 ```
 
@@ -83,13 +110,26 @@ Response:
 
 Create a new course.
 
-Request Body:
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Name of the course (max: 100 characters) |
+| description | string | Yes | Detailed description of the course |
+| instructor | string | Yes | ID of the instructor teaching the course |
+
+Response:
 
 ```json
 {
-  "name": "string",
-  "description": "string",
-  "instructor": "string"
+  "course": {
+    "id": "string",
+    "name": "string",
+    "description": "string",
+    "instructor": "string",
+    "students": [],
+    "createdAt": "date",
+    "updatedAt": "date"
+  }
 }
 ```
 
@@ -97,17 +137,55 @@ Request Body:
 
 Retrieve a specific course by ID.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the course |
+
+Response:
+
+```json
+{
+  "course": {
+    "id": "string",
+    "name": "string",
+    "description": "string",
+    "instructor": "string",
+    "students": ["string"],
+    "createdAt": "date",
+    "updatedAt": "date"
+  }
+}
+```
+
 #### PUT /api/courses/:id
 
 Update a specific course.
 
-Request Body:
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the course |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | No | Updated name of the course (max: 100 characters) |
+| description | string | No | Updated description of the course |
+| instructor | string | No | Updated ID of the instructor |
+
+Response:
 
 ```json
 {
-  "name": "string",
-  "description": "string",
-  "instructor": "string"
+  "course": {
+    "id": "string",
+    "name": "string",
+    "description": "string",
+    "instructor": "string",
+    "students": ["string"],
+    "updatedAt": "date"
+  }
 }
 ```
 
@@ -115,15 +193,44 @@ Request Body:
 
 Delete a specific course.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the course |
+
+Response:
+
+```json
+{
+  "message": "Course successfully deleted",
+  "courseId": "string"
+}
+```
+
 #### POST /api/courses/:id/students
 
 Add a student to a course.
 
-Request Body:
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the course |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| studentId | string | Yes | ID of the student to be added to the course |
+
+Response:
 
 ```json
 {
-  "studentId": "string"
+  "course": {
+    "id": "string",
+    "students": ["string"],
+    "updatedAt": "date"
+  },
+  "message": "Student successfully added to course"
 }
 ```
 
@@ -132,6 +239,18 @@ Request Body:
 #### GET /api/courses/:courseId/assignments
 
 Retrieve all assignments for a specific course.
+
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | Unique identifier of the course |
+
+Query Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| page | number | No | Page number for pagination (default: 1) |
+| limit | number | No | Number of items per page (default: 10) |
+| dueDate | date | No | Filter assignments by due date |
 
 Response:
 
@@ -154,20 +273,56 @@ Response:
 
 Create a new assignment for a specific course.
 
-Request Body:
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | Unique identifier of the course |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| title | string | Yes | Title of the assignment (max: 100 characters) |
+| description | string | Yes | Detailed description of the assignment |
+| dueDate | date | Yes | Due date for the assignment (ISO 8601 format) |
+| totalPoints | number | Yes | Maximum points possible for the assignment |
+
+Response:
 
 ```json
 {
-  "title": "string",
-  "description": "string",
-  "dueDate": "date",
-  "totalPoints": "number"
+  "assignment": {
+    "id": "string",
+    "title": "string",
+    "description": "string",
+    "dueDate": "date",
+    "courseId": "string",
+    "totalPoints": "number",
+    "createdAt": "date",
+    "updatedAt": "date"
+  }
 }
 ```
 
 #### GET /api/courses/:courseId/assignments/:assignmentId
 
 Retrieve a specific assignment.
+
+Response:
+
+```json
+{
+  "assignment": {
+    "id": "string",
+    "title": "string",
+    "description": "string",
+    "dueDate": "date",
+    "courseId": "string",
+    "totalPoints": "number",
+    "createdAt": "date",
+    "updatedAt": "date"
+  }
+}
+```
 
 #### PUT /api/courses/:courseId/assignments/:assignmentId
 
@@ -184,15 +339,48 @@ Request Body:
 }
 ```
 
+Response:
+
+```json
+{
+  "assignment": {
+    "id": "string",
+    "title": "string",
+    "description": "string",
+    "dueDate": "date",
+    "courseId": "string",
+    "totalPoints": "number",
+    "updatedAt": "date"
+  }
+}
+```
+
 #### DELETE /api/courses/:courseId/assignments/:assignmentId
 
 Delete a specific assignment.
+
+Response:
+
+```json
+{
+  "message": "Assignment successfully deleted",
+  "assignmentId": "string"
+}
+```
 
 ### Users
 
 #### GET /api/users
 
 Retrieve all users.
+
+Query Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| page | number | No | Page number for pagination (default: 1) |
+| limit | number | No | Number of items per page (default: 10) |
+| role | string | No | Filter users by role (e.g., "student", "instructor") |
+| email | string | No | Filter users by email address |
 
 Response:
 
@@ -214,14 +402,27 @@ Response:
 
 Create a new user.
 
-Request Body:
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Full name of the user |
+| email | string | Yes | Email address (must be unique) |
+| password | string | Yes | Password (min: 8 characters, must include uppercase, lowercase, number) |
+| role | string | Yes | User role ("student" or "instructor") |
+
+Response:
 
 ```json
 {
-  "name": "string",
-  "email": "string",
-  "password": "string",
-  "role": "string"
+  "user": {
+    "id": "string",
+    "name": "string",
+    "email": "string",
+    "role": "string",
+    "enrolledCourses": ["string"],
+    "createdAt": "date",
+    "updatedAt": "date"
+  }
 }
 ```
 
@@ -229,25 +430,162 @@ Request Body:
 
 Retrieve a specific user.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the user |
+
+Response:
+
+```json
+{
+  "user": {
+    "id": "string",
+    "name": "string",
+    "email": "string",
+    "role": "string",
+    "enrolledCourses": ["string"],
+    "createdAt": "date",
+    "updatedAt": "date"
+  }
+}
+```
+
 #### PUT /api/users/:id
 
 Update a specific user.
+
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the user |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | No | Updated full name of the user |
+| email | string | No | Updated email address (must be unique) |
+| role | string | No | Updated user role ("student" or "instructor") |
+
+Response:
+
+```json
+{
+  "user": {
+    "id": "string",
+    "name": "string",
+    "email": "string",
+    "role": "string",
+    "enrolledCourses": ["string"],
+    "updatedAt": "date"
+  }
+}
+```
 
 #### DELETE /api/users/:id
 
 Delete a specific user.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the user |
+
+Response:
+
+```json
+{
+  "message": "User successfully deleted",
+  "userId": "string"
+}
+```
+
 #### POST /api/users/:id/enrolments
 
 Add a course enrollment for a user.
+
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the user |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | ID of the course to enroll in |
+
+Response:
+
+```json
+{
+  "course": {
+    "id": "string",
+    "students": ["string"],
+    "updatedAt": "date"
+  },
+  "message": "Student successfully added to course"
+}
+```
 
 #### PUT /api/users/:id/enrolments
 
 Update a user's course enrollment.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the user |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | ID of the course to update enrollment for |
+| status | string | Yes | New enrollment status ("active", "completed", "dropped") |
+
+Response:
+
+```json
+{
+  "user": {
+    "id": "string",
+    "enrolledCourses": ["string"],
+    "courseStatuses": [
+      {
+        "courseId": "string",
+        "status": "string",
+        "updatedAt": "date"
+      }
+    ]
+  }
+}
+```
+
 #### DELETE /api/users/:id/enrolments
 
 Remove a course enrollment for a user.
+
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the user |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | ID of the course to remove enrollment from |
+
+Response:
+
+```json
+{
+  "user": {
+    "id": "string",
+    "enrolledCourses": ["string"],
+    "updatedAt": "date"
+  },
+  "message": "Successfully unenrolled from course"
+}
+```
 
 ## Error Handling
 
