@@ -1,26 +1,44 @@
-import mongoose, { connect } from "mongoose";
-import { MongoClient } from "mongodb";
-// import { userInfo } from "os";
+import mongoose from "mongoose";
 require("dotenv").config();
 
-export const client = new MongoClient(process.env.MONGO_URI!);
 const MONGO_URI = process.env.MONGO_URI as string;
 
-if (!client) {
+if (!MONGO_URI) {
   throw new Error("MongoDB URI is missing");
 }
 
-export const db = client.db("academix-ts-api");
+let conn: typeof mongoose | null = null;
 
-const connectToMongoDb = async (): Promise<object> => {
-  try {
-    await connect(MONGO_URI);
+const connectToMongoDb = async (): Promise<typeof mongoose> => {
+  if (conn == null) {
+    conn = await mongoose.connect(MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+      maxPoolSize: 10,
+      minPoolSize: 5,
+      socketTimeoutMS: 45000,
+      family: 4,
+    });
 
-    return { status: 200, msg: "OK - Connected" };
-  } catch (err) {
-    console.error(err);
-    return { status: 400, msg: "Bad Request - Could Not Connect" };
+    conn.connection.on("connected", () => {
+      console.log("MongoDB connection established successfully");
+    });
+
+    conn.connection.on("error", (err) => {
+      console.error("MongoDB connection error:", err);
+    });
+
+    conn.connection.on("disconnected", () => {
+      console.log("MongoDB connection disconnected");
+    });
+
+    // Handle process termination
+    process.on("SIGINT", async () => {
+      await conn?.connection.close();
+      process.exit(0);
+    });
   }
+
+  return conn;
 };
 
 export default connectToMongoDb;
