@@ -3,7 +3,7 @@ import apiRoutes from "./api/index";
 
 const router = Router();
 
-router.use("/", apiRoutes);
+router.use("/api", apiRoutes);
 
 router.use((_req, res) => {
   return res.send("404 Not Found");

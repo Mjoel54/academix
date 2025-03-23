@@ -21,6 +21,17 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
   lastLogin?: Date;
+
+  // Method declarations
+  addEnrollment(
+    courseId: Schema.Types.ObjectId,
+    role: CourseRole
+  ): Promise<void>;
+  updateEnrollment(
+    courseId: Schema.Types.ObjectId,
+    updates: Partial<IEnrollment>
+  ): Promise<void>;
+  removeEnrollment(courseId: Schema.Types.ObjectId): Promise<void>;
 }
 
 const enrollmentSchema = new Schema<IEnrollment>({
