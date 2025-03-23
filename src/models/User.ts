@@ -1,5 +1,5 @@
 import { Schema, model, Document } from "mongoose";
-import Enrolment, { CourseRole, IEnrolment } from "./Enrolments";
+import { enrolmentSchema, CourseRole, IEnrolment } from "./Enrolments";
 
 export interface IUser extends Document {
   name: string;
@@ -57,7 +57,7 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: true,
     },
-    enrolments: [Enrolment.schema],
+    enrolments: [enrolmentSchema],
     avatar: {
       type: String,
       default: null,
@@ -92,7 +92,6 @@ userSchema.methods.addEnrolment = async function (
       course: courseId,
       role,
       enrolledAt: new Date(),
-      isActive: true,
     });
     await this.save();
   }
@@ -118,7 +117,7 @@ userSchema.methods.removeEnrolment = async function (
     (e: IEnrolment) => e.course.toString() === courseId.toString()
   );
   if (enrolmentIndex > -1) {
-    this.enrolments[enrolmentIndex].isActive = false;
+    this.enrolments.splice(enrolmentIndex, 1);
     await this.save();
   }
 };
