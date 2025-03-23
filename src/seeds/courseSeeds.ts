@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { IAssignmentSeed } from "./assignmentSeeds";
 
 export interface ICourseSeed {
   title: string;
@@ -8,7 +9,7 @@ export interface ICourseSeed {
   term: "Fall" | "Spring" | "Summer" | "Winter";
   accessFrom: Date;
   accessUntil: Date;
-  assignments: Types.ObjectId[];
+  assignments: IAssignmentSeed[];
   modules: Types.ObjectId[];
   students: Types.ObjectId[];
   teachers: Types.ObjectId[];

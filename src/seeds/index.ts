@@ -4,8 +4,10 @@ import User from "../models/User";
 import Course from "../models/Course";
 import { userSeeds } from "./userSeeds";
 import { courseSeeds } from "./courseSeeds";
+import { assignmentSeeds } from "./assignmentSeeds";
 import type { IUser } from "../models/User";
 import type { ICourse } from "../models/Course";
+import type { IAssignmentSeed } from "./assignmentSeeds";
 
 dotenv.config();
 
@@ -34,16 +36,19 @@ const seedDatabase = async () => {
       (user) => !user.isAdmin && user.name.includes("Sarah")
     ) as IUser;
 
-    // Prepare courses with user relationships
+    // Prepare courses with user relationships and assignments
     const preparedCourses = courseSeeds.map((course) => ({
       ...course,
       teachers: teacher ? [teacher._id] : [],
       students: student ? [student._id] : [],
+      assignments:
+        assignmentSeeds[course.courseCode as keyof typeof assignmentSeeds] ||
+        [],
     }));
 
     // Insert courses
     const courses = await Course.create(preparedCourses);
-    console.log(`📚 Created ${courses.length} courses`);
+    console.log(`📚 Created ${courses.length} courses with assignments`);
 
     // Update teacher enrolments using the model method
     if (teacher) {
