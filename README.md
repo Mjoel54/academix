@@ -55,7 +55,6 @@ npm run dev
 
 ## API Documentation
 
-
 ### Courses
 
 #### GET /api/courses
@@ -94,15 +93,45 @@ Request Body:
 }
 ```
 
+#### GET /api/courses/:id
+
+Retrieve a specific course by ID.
+
+#### PUT /api/courses/:id
+
+Update a specific course.
+
+Request Body:
+
+```json
+{
+  "name": "string",
+  "description": "string",
+  "instructor": "string"
+}
+```
+
+#### DELETE /api/courses/:id
+
+Delete a specific course.
+
+#### POST /api/courses/:id/students
+
+Add a student to a course.
+
+Request Body:
+
+```json
+{
+  "studentId": "string"
+}
+```
+
 ### Assignments
 
-#### GET /api/assignments
+#### GET /api/courses/:courseId/assignments
 
-Retrieve all assignments for a course.
-
-Query Parameters:
-
-- courseId: string (required)
+Retrieve all assignments for a specific course.
 
 Response:
 
@@ -121,9 +150,9 @@ Response:
 }
 ```
 
-#### POST /api/assignments
+#### POST /api/courses/:courseId/assignments
 
-Create a new assignment.
+Create a new assignment for a specific course.
 
 Request Body:
 
@@ -132,71 +161,58 @@ Request Body:
   "title": "string",
   "description": "string",
   "dueDate": "date",
-  "courseId": "string",
   "totalPoints": "number"
 }
 ```
 
-### Students
+#### GET /api/courses/:courseId/assignments/:assignmentId
 
-#### GET /api/students
+Retrieve a specific assignment.
 
-Retrieve all students.
+#### PUT /api/courses/:courseId/assignments/:assignmentId
+
+Update a specific assignment.
+
+Request Body:
+
+```json
+{
+  "title": "string",
+  "description": "string",
+  "dueDate": "date",
+  "totalPoints": "number"
+}
+```
+
+#### DELETE /api/courses/:courseId/assignments/:assignmentId
+
+Delete a specific assignment.
+
+### Users
+
+#### GET /api/users
+
+Retrieve all users.
 
 Response:
 
 ```json
 {
-  "students": [
+  "users": [
     {
       "id": "string",
       "name": "string",
       "email": "string",
+      "role": "string",
       "enrolledCourses": ["string"]
     }
   ]
 }
 ```
 
-#### POST /api/students
+#### POST /api/users
 
-Register a new student.
-
-Request Body:
-
-```json
-{
-  "name": "string",
-  "email": "string",
-  "password": "string"
-}
-```
-
-### Teachers
-
-#### GET /api/teachers
-
-Retrieve all teachers.
-
-Response:
-
-```json
-{
-  "teachers": [
-    {
-      "id": "string",
-      "name": "string",
-      "email": "string",
-      "departments": ["string"],
-      "courses": ["string"]
-    }
-  ]
-}
-```
-
-#### POST /api/teachers
-
-Register a new teacher.
+Create a new user.
 
 Request Body:
 
@@ -205,9 +221,33 @@ Request Body:
   "name": "string",
   "email": "string",
   "password": "string",
-  "departments": ["string"]
+  "role": "string"
 }
 ```
+
+#### GET /api/users/:id
+
+Retrieve a specific user.
+
+#### PUT /api/users/:id
+
+Update a specific user.
+
+#### DELETE /api/users/:id
+
+Delete a specific user.
+
+#### POST /api/users/:id/enrolments
+
+Add a course enrollment for a user.
+
+#### PUT /api/users/:id/enrolments
+
+Update a user's course enrollment.
+
+#### DELETE /api/users/:id/enrolments
+
+Remove a course enrollment for a user.
 
 ## Error Handling
 
