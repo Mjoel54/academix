@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { CourseRole } from "../models/Enrolments";
+import { CourseRole, IEnrolment } from "../models/Enrolments";
 
 export interface IUserSeed {
   name: string;
@@ -7,12 +7,7 @@ export interface IUserSeed {
   password: string;
   isAdmin: boolean;
   isActive: boolean;
-  enrolments: Array<{
-    course: Types.ObjectId;
-    role: CourseRole;
-    enrolledAt: Date;
-    isActive: boolean;
-  }>;
+  enrolments: IEnrolment[];
   avatar?: string;
   lastLogin?: Date;
 }
