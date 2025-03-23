@@ -1,4 +1,4 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema } from "mongoose";
 
 export type CourseRole = "student" | "teacher" | "teaching_assistant";
 
@@ -7,7 +7,6 @@ export interface IEnrolment {
   role: CourseRole;
   enrolledAt: Date;
   lastAccessed?: Date;
-  isActive: boolean;
 }
 
 const enrolmentSchema = new Schema<IEnrolment>({
@@ -29,12 +28,7 @@ const enrolmentSchema = new Schema<IEnrolment>({
     type: Date,
     default: null,
   },
-  isActive: {
-    type: Boolean,
-    default: true,
-  },
 });
 
-const Enrolment = model<IEnrolment>("Enrolment", enrolmentSchema);
-
-export default Enrolment;
+export { enrolmentSchema };
+export default enrolmentSchema;
