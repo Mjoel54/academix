@@ -1,14 +1,5 @@
 import { Schema, model, Document } from "mongoose";
-
-export type CourseRole = "student" | "teacher" | "teaching_assistant";
-
-export interface IEnrollment {
-  course: Schema.Types.ObjectId;
-  role: CourseRole;
-  enrolledAt: Date;
-  lastAccessed?: Date;
-  isActive: boolean;
-}
+import Enrolment, { CourseRole, IEnrolment } from "./Enrolments";
 
 export interface IUser extends Document {
   name: string;
@@ -16,48 +7,23 @@ export interface IUser extends Document {
   password: string;
   isAdmin: boolean;
   isActive: boolean;
-  enrollments: IEnrollment[];
+  enrolments: IEnrolment[];
   avatar?: string;
   createdAt: Date;
   updatedAt: Date;
   lastLogin?: Date;
 
   // Method declarations
-  addEnrollment(
+  addEnrolment(
     courseId: Schema.Types.ObjectId,
     role: CourseRole
   ): Promise<void>;
-  updateEnrollment(
+  updateEnrolment(
     courseId: Schema.Types.ObjectId,
-    updates: Partial<IEnrollment>
+    updates: Partial<IEnrolment>
   ): Promise<void>;
-  removeEnrollment(courseId: Schema.Types.ObjectId): Promise<void>;
+  removeEnrolment(courseId: Schema.Types.ObjectId): Promise<void>;
 }
-
-const enrollmentSchema = new Schema<IEnrollment>({
-  course: {
-    type: Schema.Types.ObjectId,
-    ref: "Course",
-    required: true,
-  },
-  role: {
-    type: String,
-    required: true,
-    enum: ["student", "teacher", "teaching_assistant"],
-  },
-  enrolledAt: {
-    type: Date,
-    default: Date.now,
-  },
-  lastAccessed: {
-    type: Date,
-    default: null,
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-  },
-});
 
 const userSchema = new Schema<IUser>(
   {
@@ -91,7 +57,7 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: true,
     },
-    enrollments: [enrollmentSchema],
+    enrolments: [Enrolment.schema],
     avatar: {
       type: String,
       default: null,
@@ -110,19 +76,19 @@ const userSchema = new Schema<IUser>(
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ isAdmin: 1 });
 userSchema.index({ isActive: 1 });
-userSchema.index({ "enrollments.course": 1, "enrollments.role": 1 });
+userSchema.index({ "enrolments.course": 1, "enrolments.role": 1 });
 
-// Helper methods for enrollment management
-userSchema.methods.addEnrollment = async function (
+// Helper methods for enrolment management
+userSchema.methods.addEnrolment = async function (
   courseId: Schema.Types.ObjectId,
   role: CourseRole
 ) {
   if (
-    !this.enrollments.find(
-      (e: IEnrollment) => e.course.toString() === courseId.toString()
+    !this.enrolments.find(
+      (e: IEnrolment) => e.course.toString() === courseId.toString()
     )
   ) {
-    this.enrollments.push({
+    this.enrolments.push({
       course: courseId,
       role,
       enrolledAt: new Date(),
@@ -132,27 +98,27 @@ userSchema.methods.addEnrollment = async function (
   }
 };
 
-userSchema.methods.updateEnrollment = async function (
+userSchema.methods.updateEnrolment = async function (
   courseId: Schema.Types.ObjectId,
-  updates: Partial<IEnrollment>
+  updates: Partial<IEnrolment>
 ) {
-  const enrollment = this.enrollments.find(
-    (e: IEnrollment) => e.course.toString() === courseId.toString()
+  const enrolment = this.enrolments.find(
+    (e: IEnrolment) => e.course.toString() === courseId.toString()
   );
-  if (enrollment) {
-    Object.assign(enrollment, updates);
+  if (enrolment) {
+    Object.assign(enrolment, updates);
     await this.save();
   }
 };
 
-userSchema.methods.removeEnrollment = async function (
+userSchema.methods.removeEnrolment = async function (
   courseId: Schema.Types.ObjectId
 ) {
-  const enrollmentIndex = this.enrollments.findIndex(
-    (e: IEnrollment) => e.course.toString() === courseId.toString()
+  const enrolmentIndex = this.enrolments.findIndex(
+    (e: IEnrolment) => e.course.toString() === courseId.toString()
   );
-  if (enrollmentIndex > -1) {
-    this.enrollments[enrollmentIndex].isActive = false;
+  if (enrolmentIndex > -1) {
+    this.enrolments[enrolmentIndex].isActive = false;
     await this.save();
   }
 };

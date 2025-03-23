@@ -28,11 +28,11 @@ const seedDatabase = async () => {
 
     // Get user IDs for relationships
     const teacher = users.find(
-      (user) => (user as IUser).isAdmin === false && user.name.includes("John")
-    );
+      (user) => !user.isAdmin && user.name.includes("John")
+    ) as IUser;
     const student = users.find(
-      (user) => (user as IUser).isAdmin === false && user.name.includes("Sarah")
-    );
+      (user) => !user.isAdmin && user.name.includes("Sarah")
+    ) as IUser;
 
     // Prepare courses with user relationships
     const preparedCourses = courseSeeds.map((course) => ({
@@ -45,38 +45,20 @@ const seedDatabase = async () => {
     const courses = await Course.create(preparedCourses);
     console.log(`📚 Created ${courses.length} courses`);
 
-    // Update teacher enrollments
+    // Update teacher enrolments using the model method
     if (teacher) {
-      const teacherEnrollments = courses.map(
-        (course: mongoose.Document & ICourse) => ({
-          course: course._id,
-          role: "teacher" as const,
-          enrolledAt: new Date(),
-          isActive: true,
-        })
-      );
-
-      await User.findByIdAndUpdate(teacher._id, {
-        $push: { enrollments: { $each: teacherEnrollments } },
-      });
-      console.log("👨‍🏫 Updated teacher enrollments");
+      for (const course of courses) {
+        await teacher.addEnrolment(course._id, "teacher");
+      }
+      console.log("👨‍🏫 Updated teacher enrolments");
     }
 
-    // Update student enrollments (enroll in first two courses)
+    // Update student enrolments (enrol in first two courses)
     if (student) {
-      const studentEnrollments = courses
-        .slice(0, 2)
-        .map((course: mongoose.Document & ICourse) => ({
-          course: course._id,
-          role: "student" as const,
-          enrolledAt: new Date(),
-          isActive: true,
-        }));
-
-      await User.findByIdAndUpdate(student._id, {
-        $push: { enrollments: { $each: studentEnrollments } },
-      });
-      console.log("👩‍🎓 Updated student enrollments");
+      for (const course of courses.slice(0, 2)) {
+        await student.addEnrolment(course._id, "student");
+      }
+      console.log("👩‍🎓 Updated student enrolments");
     }
 
     console.log("✅ Database seeded successfully!");

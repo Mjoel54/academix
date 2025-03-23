@@ -5,8 +5,9 @@ import {
   createUser,
   updateUser,
   deleteUser,
-  addCourseEnrollment,
-  updateCourseEnrollment,
+  addCourseEnrolment,
+  updateCourseEnrolment,
+  removeCourseEnrolment,
 } from "../../controllers/userController";
 
 const router = Router();
@@ -17,10 +18,11 @@ router.route("/").get(getAllUsers).post(createUser);
 // User by ID routes
 router.route("/:id").get(getUserById).put(updateUser).delete(deleteUser);
 
-// User enrollment routes
+// User enrolment routes
 router
-  .route("/:id/enrollments")
-  .post(addCourseEnrollment)
-  .put(updateCourseEnrollment);
+  .route("/:id/enrolments")
+  .post(addCourseEnrolment)
+  .put(updateCourseEnrolment)
+  .delete(removeCourseEnrolment);
 
 export default router;
