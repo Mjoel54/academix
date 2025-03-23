@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { HydratedDocument } from "mongoose";
 import User, { IUser } from "../models/User";
+import { CourseRole } from "../models/Enrolments";
 
 // GET all users (with filtering and pagination)
 export const getAllUsers = async (
@@ -13,7 +14,7 @@ export const getAllUsers = async (
 
     // Add filters if provided
     if (role) {
-      filter["enrollments.role"] = role;
+      filter["enrolments.role"] = role;
     }
     if (isActive !== undefined) {
       filter.isActive = isActive === "true";
@@ -53,7 +54,7 @@ export const getUserById = async (
     const user = await User.findById(req.params.id)
       .select("-password")
       .populate({
-        path: "enrollments.course",
+        path: "enrolments.course",
         select: "title courseCode",
       });
 
@@ -211,8 +212,8 @@ export const deleteUser = async (
   }
 };
 
-// POST add course enrollment
-export const addCourseEnrollment = async (
+// POST add course enrolment
+export const addCourseEnrolment = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -237,22 +238,22 @@ export const addCourseEnrollment = async (
       return;
     }
 
-    await user.addEnrollment(courseId, role);
+    await user.addEnrolment(courseId, role as CourseRole);
 
     res.status(200).json({
       success: true,
-      message: "Course enrollment added successfully",
+      message: "Course enrolment added successfully",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: "Failed to add course enrollment",
+      error: "Failed to add course enrolment",
     });
   }
 };
 
-// PUT update course enrollment
-export const updateCourseEnrollment = async (
+// PUT update course enrolment
+export const updateCourseEnrolment = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -277,16 +278,56 @@ export const updateCourseEnrollment = async (
       return;
     }
 
-    await user.updateEnrollment(courseId, updates);
+    await user.updateEnrolment(courseId, updates);
 
     res.status(200).json({
       success: true,
-      message: "Course enrollment updated successfully",
+      message: "Course enrolment updated successfully",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: "Failed to update course enrollment",
+      error: "Failed to update course enrolment",
+    });
+  }
+};
+
+// DELETE remove course enrolment
+export const removeCourseEnrolment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { courseId } = req.body;
+    const userId = req.params.id;
+
+    if (!courseId) {
+      res.status(400).json({
+        success: false,
+        error: "Please provide courseId",
+      });
+      return;
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        error: "User not found",
+      });
+      return;
+    }
+
+    await user.removeEnrolment(courseId);
+
+    res.status(200).json({
+      success: true,
+      message: "Course enrolment removed successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to remove course enrolment",
     });
   }
 };
