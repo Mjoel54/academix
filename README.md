@@ -2,6 +2,21 @@
 
 A modern Learning Management System (LMS) API built with Express.js and MongoDB. The application provides a robust backend for managing educational resources including courses, assignments, students, and teachers.
 
+## Table of Contents
+
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+
+  - [Courses](#courses)
+  - [Assignments](#assignments)
+  - [Users](#users)
+
+- [Error Handling](#error-handling)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Tech Stack
 
 ### Backend Framework
@@ -503,12 +518,12 @@ Response:
 
 ```json
 {
-  "user": {
+  "course": {
     "id": "string",
-    "enrolledCourses": ["string"],
+    "students": ["string"],
     "updatedAt": "date"
   },
-  "message": "Successfully enrolled in course"
+  "message": "Student successfully added to course"
 }
 ```
 
