@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Course, { ICourse } from "../models/Course";
+import { IAssignment } from "../models/Assignment";
 import mongoose from "mongoose";
 
 // GET all courses (with filtering for archived)
@@ -41,9 +42,7 @@ export const getCourseById = async (
     const course = await Course.findById(req.params.id)
       .populate("teachers", "name email")
       .populate("teachingAssistants", "name email")
-      .populate("students", "name email")
-      .populate("assignments")
-      .populate("modules");
+      .populate("students", "name email");
 
     if (!course) {
       res.status(404).json({
@@ -191,7 +190,7 @@ export const updateCourse = async (
   }
 };
 
-// DELETE course (soft delete by archiving)
+// DELETE course
 export const deleteCourse = async (
   req: Request,
   res: Response
@@ -207,18 +206,16 @@ export const deleteCourse = async (
       return;
     }
 
-    // Soft delete by archiving
-    course.isArchived = true;
-    await course.save();
+    await course.deleteOne();
 
     res.status(200).json({
       success: true,
-      message: "Course archived successfully",
+      message: "Course deleted successfully",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: "Failed to archive course",
+      error: "Failed to delete course",
     });
   }
 };
@@ -274,23 +271,81 @@ export const addStudentToCourse = async (
   }
 };
 
-// POST add assignment to course
-export const addAssignmentToCourse = async (
+// GET course assignments
+export const getCourseAssignments = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { assignmentId } = req.body;
-    const courseId = req.params.id;
+    const course = await Course.findById(req.params.id);
 
-    if (!assignmentId) {
-      res.status(400).json({
+    if (!course) {
+      res.status(404).json({
         success: false,
-        error: "Please provide assignment ID",
+        error: "Course not found",
       });
       return;
     }
 
+    res.status(200).json({
+      success: true,
+      count: course.assignments.length,
+      data: course.assignments,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch assignments",
+    });
+  }
+};
+
+// POST create assignment
+export const createAssignment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    if (!course) {
+      res.status(404).json({
+        success: false,
+        error: "Course not found",
+      });
+      return;
+    }
+
+    course.assignments.push(req.body);
+    await course.save();
+
+    res.status(201).json({
+      success: true,
+      data: course.assignments[course.assignments.length - 1],
+    });
+  } catch (error) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+      return;
+    }
+
+    res.status(500).json({
+      success: false,
+      error: "Failed to create assignment",
+    });
+  }
+};
+
+// PUT update assignment
+export const updateAssignment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id: courseId, assignmentId } = req.params;
     const course = await Course.findById(courseId);
 
     if (!course) {
@@ -301,26 +356,85 @@ export const addAssignmentToCourse = async (
       return;
     }
 
-    // Check if assignment is already added
-    if (course.assignments.includes(assignmentId)) {
-      res.status(400).json({
+    const assignmentIndex = course.assignments.findIndex(
+      (a) => a._id.toString() === assignmentId
+    );
+
+    if (assignmentIndex === -1) {
+      res.status(404).json({
         success: false,
-        error: "Assignment is already added to this course",
+        error: "Assignment not found",
       });
       return;
     }
 
-    course.assignments.push(assignmentId);
+    course.assignments[assignmentIndex] = {
+      ...course.assignments[assignmentIndex].toObject(),
+      ...req.body,
+    };
+
     await course.save();
 
     res.status(200).json({
       success: true,
-      message: "Assignment added to course successfully",
+      data: course.assignments[assignmentIndex],
+    });
+  } catch (error) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+      return;
+    }
+
+    res.status(500).json({
+      success: false,
+      error: "Failed to update assignment",
+    });
+  }
+};
+
+// DELETE assignment
+export const deleteAssignment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id: courseId, assignmentId } = req.params;
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      res.status(404).json({
+        success: false,
+        error: "Course not found",
+      });
+      return;
+    }
+
+    const assignmentIndex = course.assignments.findIndex(
+      (a) => a._id.toString() === assignmentId
+    );
+
+    if (assignmentIndex === -1) {
+      res.status(404).json({
+        success: false,
+        error: "Assignment not found",
+      });
+      return;
+    }
+
+    course.assignments.splice(assignmentIndex, 1);
+    await course.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Assignment deleted successfully",
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: "Failed to add assignment to course",
+      error: "Failed to delete assignment",
     });
   }
 };

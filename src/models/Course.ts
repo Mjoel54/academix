@@ -1,4 +1,5 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
+import { IAssignment, assignmentSchema } from "./Assignment";
 
 export interface ICourse extends Document {
   title: string;
@@ -8,7 +9,7 @@ export interface ICourse extends Document {
   term: string;
   accessFrom: Date;
   accessUntil: Date;
-  assignments: string[];
+  assignments: Types.DocumentArray<IAssignment & Document>;
   modules: string[];
   students: string[];
   teachers: string[];
@@ -60,12 +61,7 @@ const courseSchema = new Schema<ICourse>(
       type: Date,
       required: true,
     },
-    assignments: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Assignment",
-      },
-    ],
+    assignments: [assignmentSchema],
     modules: [
       {
         type: Schema.Types.ObjectId,
