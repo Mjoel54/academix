@@ -641,17 +641,15 @@ Response:
 
 ```json
 {
-  "data": {
-    "id": "string",
-    "name": "string",
-    "startDate": "date",
-    "endDate": "date",
-    "status": "string",
-    "courses": [],
-    "createdAt": "date",
-    "updatedAt": "date",
-    "duration": "number"
-  }
+  "id": "string",
+  "name": "string",
+  "startDate": "date",
+  "endDate": "date",
+  "status": "string",
+  "courses": [],
+  "createdAt": "date",
+  "updatedAt": "date",
+  "duration": "number"
 }
 ```
 
