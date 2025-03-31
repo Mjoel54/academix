@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Course, { ICourse } from "../models/Course";
 import { IAssignment } from "../models/Assignment";
 import mongoose from "mongoose";
+import Term from "../models/Term";
 
 // GET all courses (with filtering for archived)
 export const getAllCourses = async (
@@ -12,10 +13,17 @@ export const getAllCourses = async (
     const { term, published } = req.query;
     const filter: Record<string, any> = { isArchived: false };
 
-    if (term) filter.term = term;
+    if (term) {
+      // If term is provided, find the term ID and use it in the filter
+      const termDoc = await Term.findOne({ name: term });
+      if (termDoc) {
+        filter.term = termDoc._id;
+      }
+    }
     if (published !== undefined) filter.isPublished = published === "true";
 
     const courses = await Course.find(filter)
+      .populate("term", "name startDate endDate status")
       .populate("teachers", "name email")
       .populate("teachingAssistants", "name email")
       .sort({ createdAt: -1 });
@@ -98,15 +106,31 @@ export const createCourse = async (
       return;
     }
 
+    // Validate that the term exists
+    const termDoc = await Term.findById(term);
+    if (!termDoc) {
+      res.status(400).json({
+        success: false,
+        error: "Invalid term ID",
+      });
+      return;
+    }
+
     const course = await Course.create({
       ...req.body,
       isPublished: false,
       isArchived: false,
     });
 
+    // Populate the term data in the response
+    const populatedCourse = await Course.findById(course._id)
+      .populate("term", "name startDate endDate status")
+      .populate("teachers", "name email")
+      .populate("teachingAssistants", "name email");
+
     res.status(201).json({
       success: true,
-      data: course,
+      data: populatedCourse,
     });
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
