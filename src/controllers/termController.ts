@@ -62,10 +62,7 @@ export const getTermById = async (
       });
       return;
     }
-    res.status(200).json({
-      success: true,
-      data: term,
-    });
+    res.status(200).json(term);
   } catch (error) {
     res.status(500).json({
       success: false,
