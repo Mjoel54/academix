@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface ITerm extends Document {
   name: string;
@@ -8,6 +8,11 @@ export interface ITerm extends Document {
   courses: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
+  isActive(): boolean;
+}
+
+export interface ITermModel extends Model<ITerm> {
+  getCurrentTerm(): Promise<ITerm | null>;
 }
 
 const termSchema = new Schema<ITerm>(
@@ -94,6 +99,6 @@ termSchema.pre("save", function (this: ITerm, next) {
   next();
 });
 
-const Term = mongoose.model<ITerm>("Term", termSchema);
+const Term = mongoose.model<ITerm, ITermModel>("Term", termSchema);
 
 export default Term;
