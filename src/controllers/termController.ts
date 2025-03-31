@@ -103,10 +103,7 @@ export const createTerm = async (
     }
 
     const term = await Term.create(req.body);
-    res.status(201).json({
-      success: true,
-      data: term,
-    });
+    res.status(201).json(term);
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       res.status(400).json({
