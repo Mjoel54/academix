@@ -51,8 +51,24 @@ const termSchema = new Schema<ITerm>(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret) {
+        delete ret._id;
+        delete ret.__v;
+        const { id, ...rest } = ret;
+        return { id, ...rest };
+      },
+    },
+    toObject: {
+      virtuals: true,
+      transform: function (doc, ret) {
+        delete ret._id;
+        delete ret.__v;
+        const { id, ...rest } = ret;
+        return { id, ...rest };
+      },
+    },
   }
 );
 

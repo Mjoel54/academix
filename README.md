@@ -11,6 +11,7 @@ A modern Learning Management System (LMS) API built with Express.js and MongoDB.
   - [Courses](#courses)
   - [Assignments](#assignments)
   - [Users](#users)
+  - [Terms](#terms)
 
 - [Error Handling](#error-handling)
 - [Testing](#testing)
@@ -584,6 +585,175 @@ Response:
     "updatedAt": "date"
   },
   "message": "Successfully unenrolled from course"
+}
+```
+
+### Terms
+
+#### GET /api/terms
+
+Retrieve all terms.
+
+Query Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| page | number | No | Page number for pagination (default: 1) |
+| limit | number | No | Number of items per page (default: 10) |
+| status | string | No | Filter terms by status ("active", "upcoming", "completed") |
+
+Response:
+
+```json
+{
+  "terms": [
+    {
+      "id": "string",
+      "name": "string",
+      "startDate": "date",
+      "endDate": "date",
+      "status": "string",
+      "courses": ["string"],
+      "createdAt": "date",
+      "updatedAt": "date"
+    }
+  ],
+  "pagination": {
+    "total": "number",
+    "page": "number",
+    "pages": "number"
+  }
+}
+```
+
+#### POST /api/terms
+
+Create a new term.
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Name of the term (e.g., "Fall 2024") |
+| startDate | date | Yes | Start date of the term (ISO 8601 format) |
+| endDate | date | Yes | End date of the term (ISO 8601 format) |
+| status | string | Yes | Status of the term ("active", "upcoming", "completed") |
+
+Response:
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "startDate": "date",
+  "endDate": "date",
+  "status": "string",
+  "courses": [],
+  "createdAt": "date",
+  "updatedAt": "date",
+  "duration": "number"
+}
+```
+
+#### GET /api/terms/:id
+
+Retrieve a specific term.
+
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the term |
+
+Response:
+
+```json
+{
+  "term": {
+    "id": "string",
+    "name": "string",
+    "startDate": "date",
+    "endDate": "date",
+    "status": "string",
+    "courses": ["string"],
+    "createdAt": "date",
+    "updatedAt": "date"
+  }
+}
+```
+
+#### PUT /api/terms/:id
+
+Update a specific term.
+
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the term |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | No | Updated name of the term |
+| startDate | date | No | Updated start date of the term |
+| endDate | date | No | Updated end date of the term |
+| status | string | No | Updated status of the term |
+
+Response:
+
+```json
+{
+  "term": {
+    "id": "string",
+    "name": "string",
+    "startDate": "date",
+    "endDate": "date",
+    "status": "string",
+    "courses": ["string"],
+    "updatedAt": "date"
+  }
+}
+```
+
+#### DELETE /api/terms/:id
+
+Delete a specific term.
+
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the term |
+
+Response:
+
+```json
+{
+  "message": "Term successfully deleted",
+  "termId": "string"
+}
+```
+
+#### POST /api/terms/:id/courses
+
+Add a course to a term.
+
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| id | string | Yes | Unique identifier of the term |
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | ID of the course to be added to the term |
+
+Response:
+
+```json
+{
+  "term": {
+    "id": "string",
+    "courses": ["string"],
+    "updatedAt": "date"
+  },
+  "message": "Course successfully added to term"
 }
 ```
 
