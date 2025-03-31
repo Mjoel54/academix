@@ -1,12 +1,13 @@
 import { Types } from "mongoose";
 import { IAssignmentSeed } from "./assignmentSeeds";
+import { ITerm } from "../models/Term";
 
 export interface ICourseSeed {
   title: string;
   courseCode: string;
   sisId: string;
   description: string;
-  term: "Fall" | "Spring" | "Summer" | "Winter";
+  term: Types.ObjectId | ITerm;
   accessFrom: Date;
   accessUntil: Date;
   assignments: IAssignmentSeed[];
@@ -18,13 +19,15 @@ export interface ICourseSeed {
   isArchived: boolean;
 }
 
+// Note: The actual term IDs will need to be set when seeding the database
+// This is just a placeholder structure
 export const courseSeeds: ICourseSeed[] = [
   {
     title: "Introduction to Programming",
     courseCode: "CS101",
     sisId: "CS101-2024-SPRING",
     description: "Learn the fundamentals of programming using JavaScript",
-    term: "Spring",
+    term: new Types.ObjectId(), // This will be replaced with actual term ID during seeding
     accessFrom: new Date("2024-01-15"),
     accessUntil: new Date("2024-05-15"),
     assignments: [],
@@ -41,7 +44,7 @@ export const courseSeeds: ICourseSeed[] = [
     sisId: "MATH301-2024-SPRING",
     description:
       "Advanced topics in mathematics including calculus and linear algebra",
-    term: "Spring",
+    term: new Types.ObjectId(), // This will be replaced with actual term ID during seeding
     accessFrom: new Date("2024-01-15"),
     accessUntil: new Date("2024-05-15"),
     assignments: [],
@@ -57,7 +60,7 @@ export const courseSeeds: ICourseSeed[] = [
     courseCode: "ART201",
     sisId: "ART201-2024-SPRING",
     description: "Survey of art history from the Renaissance to modern times",
-    term: "Spring",
+    term: new Types.ObjectId(), // This will be replaced with actual term ID during seeding
     accessFrom: new Date("2024-01-15"),
     accessUntil: new Date("2024-05-15"),
     assignments: [],

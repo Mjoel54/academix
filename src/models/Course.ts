@@ -1,12 +1,13 @@
 import { Schema, model, Document, Types } from "mongoose";
 import { IAssignment, assignmentSchema } from "./Assignment";
+import Term, { ITerm } from "./Term";
 
 export interface ICourse extends Document {
   title: string;
   courseCode: string;
   sisId: string;
   description: string;
-  term: string;
+  term: Types.ObjectId | ITerm;
   accessFrom: Date;
   accessUntil: Date;
   assignments: Types.DocumentArray<IAssignment & Document>;
@@ -49,9 +50,9 @@ const courseSchema = new Schema<ICourse>(
       maxlength: 1000,
     },
     term: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Term",
       required: true,
-      enum: ["Fall", "Spring", "Summer", "Winter"],
     },
     accessFrom: {
       type: Date,
