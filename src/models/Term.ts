@@ -77,13 +77,6 @@ termSchema.index({ startDate: 1 });
 termSchema.index({ status: 1 });
 termSchema.index({ name: 1 });
 
-// Virtual for term duration in days
-termSchema.virtual("duration").get(function (this: ITerm) {
-  return Math.ceil(
-    (this.endDate.getTime() - this.startDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
-});
-
 // Method to check if term is currently active
 termSchema.methods.isActive = function (this: ITerm): boolean {
   const now = new Date();
