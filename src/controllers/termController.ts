@@ -139,7 +139,9 @@ export const updateTerm = async (
 
     const term = await Term.findByIdAndUpdate(
       req.params.id,
+      // $set tells MongoDB to update only the fields passed in the req.body
       { $set: req.body },
+      // new: true tells MongoDB to return the updated document
       { new: true, runValidators: true }
     );
 
@@ -151,10 +153,7 @@ export const updateTerm = async (
       return;
     }
 
-    res.status(200).json({
-      success: true,
-      data: term,
-    });
+    res.status(200).json(term);
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       res.status(400).json({
