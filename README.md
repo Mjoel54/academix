@@ -588,6 +588,8 @@ Response:
 }
 ```
 
+---
+
 ### Terms
 
 API for viewing terms.
@@ -643,6 +645,8 @@ Response:
 }
 ```
 
+---
+
 #### POST /api/terms
 
 Create a new term.
@@ -657,6 +661,8 @@ Request Body Parameters:
 
 Returns a [Term](#a-term-object-looks-like) object
 
+---
+
 #### GET /api/terms/:id
 
 Retrieve a specific term.
@@ -667,6 +673,8 @@ URL Parameters:
 | id | string | Yes | Unique identifier of the term |
 
 Returns a [Term](#a-term-object-looks-like) object
+
+---
 
 #### PUT /api/terms/:id
 
@@ -687,6 +695,8 @@ Request Body Parameters:
 
 Returns a [Term](#a-term-object-looks-like) object
 
+---
+
 #### DELETE /api/terms/:id
 
 Delete a specific term.
@@ -697,6 +707,8 @@ URL Parameters:
 | id | string | Yes | Unique identifier of the term |
 
 Returns a [Term](#a-term-object-looks-like) object
+
+---
 
 #### POST /api/terms/:id/courses
 
