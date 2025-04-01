@@ -588,6 +588,8 @@ Response:
 }
 ```
 
+---
+
 ### Terms
 
 API for viewing terms.
@@ -596,15 +598,22 @@ API for viewing terms.
 
 ```json
 {
+  // The unique id of the term
   "id": "string",
+  // The name of the term
   "name": "string",
+  // The dateTime of the start of the term
   "startDate": "date",
+  // The dateTime of the end of the term
   "endDate": "date",
+  // The status of the term. Can be 'active' or 'completed'
   "status": "string",
+  // An array of course in the term
   "courses": [],
+  // The dateTime when the term was created
   "createdAt": "date",
-  "updatedAt": "date",
-  "duration": "number"
+  // The dateTime when the term was last updated
+  "updatedAt": "date"
 }
 ```
 
@@ -643,6 +652,8 @@ Response:
 }
 ```
 
+---
+
 #### POST /api/terms
 
 Create a new term.
@@ -657,6 +668,8 @@ Request Body Parameters:
 
 Returns a [Term](#a-term-object-looks-like) object
 
+---
+
 #### GET /api/terms/:id
 
 Retrieve a specific term.
@@ -667,6 +680,8 @@ URL Parameters:
 | id | string | Yes | Unique identifier of the term |
 
 Returns a [Term](#a-term-object-looks-like) object
+
+---
 
 #### PUT /api/terms/:id
 
@@ -687,6 +702,8 @@ Request Body Parameters:
 
 Returns a [Term](#a-term-object-looks-like) object
 
+---
+
 #### DELETE /api/terms/:id
 
 Delete a specific term.
@@ -697,6 +714,8 @@ URL Parameters:
 | id | string | Yes | Unique identifier of the term |
 
 Returns a [Term](#a-term-object-looks-like) object
+
+---
 
 #### POST /api/terms/:id/courses
 
