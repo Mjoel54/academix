@@ -699,15 +699,15 @@ Response:
 
 ```json
 {
-  "term": {
-    "id": "string",
-    "name": "string",
-    "startDate": "date",
-    "endDate": "date",
-    "status": "string",
-    "courses": ["string"],
-    "updatedAt": "date"
-  }
+  "id": "string",
+  "name": "string",
+  "startDate": "date",
+  "endDate": "date",
+  "status": "string",
+  "courses": ["string"],
+  "createdAt": "date",
+  "updatedAt": "date",
+  "duration": "number"
 }
 ```
 
