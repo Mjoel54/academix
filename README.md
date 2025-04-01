@@ -590,6 +590,24 @@ Response:
 
 ### Terms
 
+API for viewing terms.
+
+#### A Term object looks like:
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "startDate": "date",
+  "endDate": "date",
+  "status": "string",
+  "courses": [],
+  "createdAt": "date",
+  "updatedAt": "date",
+  "duration": "number"
+}
+```
+
 #### GET /api/terms
 
 Retrieve all terms.
@@ -637,21 +655,7 @@ Request Body Parameters:
 | endDate | date | Yes | End date of the term (ISO 8601 format) |
 | status | string | Yes | Status of the term ("active", "upcoming", "completed") |
 
-Response:
-
-```json
-{
-  "id": "string",
-  "name": "string",
-  "startDate": "date",
-  "endDate": "date",
-  "status": "string",
-  "courses": [],
-  "createdAt": "date",
-  "updatedAt": "date",
-  "duration": "number"
-}
-```
+Returns a [Term](#a-term-object-looks-like) object
 
 #### GET /api/terms/:id
 
@@ -662,21 +666,7 @@ URL Parameters:
 |-----------|------|----------|-------------|
 | id | string | Yes | Unique identifier of the term |
 
-Response:
-
-```json
-{
-  "id": "string",
-  "name": "string",
-  "startDate": "date",
-  "endDate": "date",
-  "status": "string",
-  "courses": ["string"],
-  "createdAt": "date",
-  "updatedAt": "date",
-  "duration": "number"
-}
-```
+Returns a [Term](#a-term-object-looks-like) object
 
 #### PUT /api/terms/:id
 
@@ -695,21 +685,7 @@ Request Body Parameters:
 | endDate | date | No | Updated end date of the term |
 | status | string | No | Updated status of the term |
 
-Response:
-
-```json
-{
-  "id": "string",
-  "name": "string",
-  "startDate": "date",
-  "endDate": "date",
-  "status": "string",
-  "courses": ["string"],
-  "createdAt": "date",
-  "updatedAt": "date",
-  "duration": "number"
-}
-```
+Returns a [Term](#a-term-object-looks-like) object
 
 #### DELETE /api/terms/:id
 
@@ -720,21 +696,7 @@ URL Parameters:
 |-----------|------|----------|-------------|
 | id | string | Yes | Unique identifier of the term |
 
-Response:
-
-```json
-{
-  "id": "string",
-  "name": "string",
-  "startDate": "date",
-  "endDate": "date",
-  "status": "string",
-  "courses": ["string"],
-  "createdAt": "date",
-  "updatedAt": "date",
-  "duration": "number"
-}
-```
+Returns a [Term](#a-term-object-looks-like) object
 
 #### POST /api/terms/:id/courses
 
