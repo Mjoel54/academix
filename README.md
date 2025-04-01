@@ -724,8 +724,15 @@ Response:
 
 ```json
 {
-  "message": "Term successfully deleted",
-  "termId": "string"
+  "id": "string",
+  "name": "string",
+  "startDate": "date",
+  "endDate": "date",
+  "status": "string",
+  "courses": ["string"],
+  "createdAt": "date",
+  "updatedAt": "date",
+  "duration": "number"
 }
 ```
 
