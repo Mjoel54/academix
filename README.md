@@ -598,21 +598,13 @@ API for viewing terms.
 
 ```json
 {
-  // The unique id of the term
   "id": "string",
-  // The name of the term
   "name": "string",
-  // The dateTime of the start of the term
   "startDate": "date",
-  // The dateTime of the end of the term
   "endDate": "date",
-  // The status of the term. Can be 'active' or 'completed'
   "status": "string",
-  // An array of course in the term
   "courses": [],
-  // The dateTime when the term was created
   "createdAt": "date",
-  // The dateTime when the term was last updated
   "updatedAt": "date"
 }
 ```
