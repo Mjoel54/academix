@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { HydratedDocument } from "mongoose";
 import User, { IUser } from "../models/User";
+import bcrypt from "bcrypt";
 
 // POST create new user
 export const createUser = async (
@@ -29,11 +30,14 @@ export const createUser = async (
       return;
     }
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create user
     const user: HydratedDocument<IUser> = new User({
       name,
       email: email.toLowerCase(),
-      password, // Note: Password should be hashed before saving
+      password: hashedPassword,
       isAdmin: isAdmin || false,
       isActive: true,
     });
