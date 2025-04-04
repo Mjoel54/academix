@@ -44,12 +44,23 @@ export const createUser = async (
 
     await user.save();
 
-    // Remove password from response
-    const { password: _, ...userResponse } = user.toObject();
+    // Fetch the fresh user from database
+    const freshUser = await User.findById(user._id).select("-password");
+
+    if (!freshUser) {
+      res.status(500).json({
+        success: false,
+        error: "Failed to retrieve created user",
+      });
+      return;
+    }
 
     res.status(201).json({
       success: true,
-      data: userResponse,
+      data: {
+        ...freshUser.toObject(),
+        id: user._id,
+      },
     });
   } catch (error) {
     res.status(500).json({
