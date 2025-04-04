@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { HydratedDocument } from "mongoose";
-import User, { IUser } from "../models/User";
+import User from "../models/User";
 import bcrypt from "bcrypt";
 
 // POST create new user
@@ -33,34 +32,40 @@ export const createUser = async (
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
-    const user: HydratedDocument<IUser> = new User({
+    // Create user input data
+    const userDataObject = {
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
       isAdmin: isAdmin || false,
       isActive: true,
-    });
+    };
 
-    await user.save();
+    // Create user
+    const user = await User.create(userDataObject);
+    console.log(user);
 
-    // Fetch the fresh user from database
-    const freshUser = await User.findById(user._id).select("-password");
+    // Convert to plain object
+    const userObj = user.toObject();
 
-    if (!freshUser) {
-      res.status(500).json({
-        success: false,
-        error: "Failed to retrieve created user",
-      });
-      return;
-    }
+    // Create a new object with _id as first property and without password
+    const userWithoutPassword = {
+      id: userObj._id,
+      name: userObj.name,
+      email: userObj.email,
+      isAdmin: userObj.isAdmin,
+      isActive: userObj.isActive,
+      enrolments: userObj.enrolments,
+      avatar: userObj.avatar,
+      createdAt: userObj.createdAt,
+      updatedAt: userObj.updatedAt,
+      lastLogin: userObj.lastLogin,
+      ...(userObj.id ? { id: userObj.id } : {}),
+    };
 
     res.status(201).json({
       success: true,
-      data: {
-        ...freshUser.toObject(),
-        id: user._id,
-      },
+      data: userWithoutPassword,
     });
   } catch (error) {
     res.status(500).json({

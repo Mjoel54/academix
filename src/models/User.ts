@@ -71,7 +71,6 @@ const userSchema = new Schema<IUser>(
     timestamps: true,
     toJSON: {
       transform: function (doc, ret) {
-        delete ret._id;
         delete ret.__v;
         const { id, ...rest } = ret;
         return { id, ...rest };
@@ -79,7 +78,6 @@ const userSchema = new Schema<IUser>(
     },
     toObject: {
       transform: function (doc, ret) {
-        delete ret._id;
         delete ret.__v;
         const { id, ...rest } = ret;
         return { id, ...rest };
