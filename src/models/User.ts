@@ -1,5 +1,8 @@
 import { Schema, model, Document } from "mongoose";
 import { enrolmentSchema, CourseRole, IEnrolment } from "./Enrolments";
+import bcrypt from "bcrypt";
+
+const SALT_ROUNDS = 11;
 
 export interface IUser extends Document {
   name: string;
@@ -23,6 +26,7 @@ export interface IUser extends Document {
     updates: Partial<IEnrolment>
   ): Promise<void>;
   removeEnrolment(courseId: Schema.Types.ObjectId): Promise<void>;
+  comparePassword(userInputPassword: string): Promise<boolean>;
 }
 
 const userSchema = new Schema<IUser>(
@@ -134,6 +138,25 @@ userSchema.methods.removeEnrolment = async function (
     this.enrolments.splice(enrolmentIndex, 1);
     await this.save();
   }
+};
+
+userSchema.pre("save", async function preSave(next) {
+  const user = this;
+  if (!user.isModified("password")) return next();
+
+  try {
+    const hashedPassword = await bcrypt.hash(user.password, SALT_ROUNDS);
+    user.password = hashedPassword;
+    return next();
+  } catch (err) {
+    return next(err as Error);
+  }
+});
+
+userSchema.methods.comparePassword = async function comparePassword(
+  userInputPassword: string
+): Promise<boolean> {
+  return await bcrypt.compare(userInputPassword, this.password);
 };
 
 const User = model<IUser>("User", userSchema);

@@ -96,8 +96,8 @@ export const login = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Authentication failed" });
   }
 
-  // Compare the provided password with the stored hashed password
-  const passwordIsValid = await bcrypt.compare(password, user.password);
+  // Compare the provided password with the stored hashed password using the model method
+  const passwordIsValid = await user.comparePassword(password);
 
   // If password is invalid, send an authentication failed response
   if (!passwordIsValid) {
