@@ -16,7 +16,7 @@ export const getAllTerms = async (
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+      success: false,   
       error: "Failed to fetch terms",
     });
   }

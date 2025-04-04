@@ -408,21 +408,26 @@ Request Body Parameters:
 |-----------|------|----------|-------------|
 | name | string | Yes | Full name of the user |
 | email | string | Yes | Email address (must be unique) |
-| password | string | Yes | Password (min: 8 characters, must include uppercase, lowercase, number) |
-| role | string | Yes | User role ("student" or "instructor") |
+| password | string | Yes | User password |
+| isAdmin | boolean | No | Whether the user is an administrator (default: false) |
 
 Response:
+The response will not contain the user's password.
 
 ```json
 {
-  "user": {
+  "success": true,
+  "data": {
     "id": "string",
     "name": "string",
     "email": "string",
-    "role": "string",
-    "enrolledCourses": ["string"],
+    "isAdmin": false,
+    "isActive": true,
+    "enrolments": ["string"],
+    "avatar": null,
     "createdAt": "date",
-    "updatedAt": "date"
+    "updatedAt": "date",
+    "lastLogin": null
   }
 }
 ```
@@ -598,21 +603,13 @@ API for viewing terms.
 
 ```json
 {
-  // The unique id of the term
   "id": "string",
-  // The name of the term
   "name": "string",
-  // The dateTime of the start of the term
   "startDate": "date",
-  // The dateTime of the end of the term
   "endDate": "date",
-  // The status of the term. Can be 'active' or 'completed'
   "status": "string",
-  // An array of course in the term
   "courses": [],
-  // The dateTime when the term was created
   "createdAt": "date",
-  // The dateTime when the term was last updated
   "updatedAt": "date"
 }
 ```
