@@ -8,6 +8,7 @@ A modern Learning Management System (LMS) API built with Express.js and MongoDB.
 - [Getting Started](#getting-started)
 - [API Documentation](#api-documentation)
 
+  - [Authentication](#authentication)
   - [Courses](#courses)
   - [Assignments](#assignments)
   - [Users](#users)
@@ -70,6 +71,60 @@ npm run dev
 ```
 
 ## API Documentation
+
+### Authentication
+
+#### POST /auth/register
+
+Create a new user account.
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Full name of the user |
+| email | string | Yes | Email address (must be unique) |
+| password | string | Yes | User password |
+| isAdmin | boolean | No | Whether the user is an administrator (default: false) |
+
+Response:
+The response will not contain the user's password.
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "string",
+    "name": "string",
+    "email": "string",
+    "isAdmin": false,
+    "isActive": true,
+    "enrolments": ["string"],
+    "avatar": null,
+    "createdAt": "date",
+    "updatedAt": "date",
+    "lastLogin": null
+  }
+}
+```
+
+#### POST /auth/login
+
+Authenticate a user and receive a JWT token.
+
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| email | string | Yes | User's email address |
+| password | string | Yes | User's password |
+
+Response:
+
+```json
+{
+  "success": true,
+  "token": "string"
+}
+```
 
 ### Courses
 
@@ -396,39 +451,6 @@ Response:
       "enrolledCourses": ["string"]
     }
   ]
-}
-```
-
-#### POST /api/users
-
-Create a new user.
-
-Request Body Parameters:
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| name | string | Yes | Full name of the user |
-| email | string | Yes | Email address (must be unique) |
-| password | string | Yes | User password |
-| isAdmin | boolean | No | Whether the user is an administrator (default: false) |
-
-Response:
-The response will not contain the user's password.
-
-```json
-{
-  "success": true,
-  "data": {
-    "id": "string",
-    "name": "string",
-    "email": "string",
-    "isAdmin": false,
-    "isActive": true,
-    "enrolments": ["string"],
-    "avatar": null,
-    "createdAt": "date",
-    "updatedAt": "date",
-    "lastLogin": null
-  }
 }
 ```
 
