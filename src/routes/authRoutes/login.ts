@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Request, Response } from "express";
 import User from "../../models/User"; // Import the User model
 import jwt from "jsonwebtoken"; // Import the JSON Web Token library
 import bcrypt from "bcrypt"; // Import the bcrypt library for password hashing

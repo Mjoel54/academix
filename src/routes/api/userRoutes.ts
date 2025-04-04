@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   getAllUsers,
   getUserById,
-  createUser,
   updateUser,
   deleteUser,
   addCourseEnrolment,
@@ -13,7 +12,7 @@ import {
 const router = Router();
 
 // Base user routes
-router.route("/").get(getAllUsers).post(createUser);
+router.route("/").get(getAllUsers);
 
 // User by ID routes
 router.route("/:id").get(getUserById).put(updateUser).delete(deleteUser);
