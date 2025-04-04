@@ -408,21 +408,26 @@ Request Body Parameters:
 |-----------|------|----------|-------------|
 | name | string | Yes | Full name of the user |
 | email | string | Yes | Email address (must be unique) |
-| password | string | Yes | Password (min: 8 characters, must include uppercase, lowercase, number) |
-| role | string | Yes | User role ("student" or "instructor") |
+| password | string | Yes | User password |
+| isAdmin | boolean | No | Whether the user is an administrator (default: false) |
 
 Response:
+The response will not contain the user's password.
 
 ```json
 {
-  "user": {
+  "success": true,
+  "data": {
     "id": "string",
     "name": "string",
     "email": "string",
-    "role": "string",
-    "enrolledCourses": ["string"],
+    "isAdmin": false,
+    "isActive": true,
+    "enrolments": ["string"],
+    "avatar": null,
     "createdAt": "date",
-    "updatedAt": "date"
+    "updatedAt": "date",
+    "lastLogin": null
   }
 }
 ```
