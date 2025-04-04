@@ -43,7 +43,6 @@ export const createUser = async (
 
     // Create user
     const user = await User.create(userDataObject);
-    console.log(user);
 
     // Convert to plain object
     const userObj = user.toObject();
