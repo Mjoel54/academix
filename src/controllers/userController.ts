@@ -54,7 +54,7 @@ export const getUserById = async (
       .select("-password")
       .populate({
         path: "enrolments.course",
-        select: "title courseCode",
+        select: "title",
       });
 
     if (!user) {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Course, { ICourse } from "../models/Course";
 import { IAssignment } from "../models/Assignment";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Term from "../models/Term";
 
 // GET all courses (with filtering for archived)
@@ -48,6 +48,7 @@ export const getCourseById = async (
 ): Promise<void> => {
   try {
     const course = await Course.findById(req.params.id)
+      .populate("term", "name startDate endDate status")
       .populate("teachers", "name email")
       .populate("teachingAssistants", "name email")
       .populate("students", "name email");
@@ -60,9 +61,13 @@ export const getCourseById = async (
       return;
     }
 
+    // Convert to plain object and reorder fields to ensure _id appears first
+    const courseObj = course.toObject();
+    const { _id, ...rest } = courseObj;
+
     res.status(200).json({
       success: true,
-      data: course,
+      data: { _id, ...rest },
     });
   } catch (error) {
     if (error instanceof mongoose.Error.CastError) {
@@ -88,7 +93,6 @@ export const createCourse = async (
   try {
     const {
       title,
-      courseCode,
       sisId,
       description,
       term,
@@ -98,20 +102,10 @@ export const createCourse = async (
     } = req.body;
 
     // Validate required fields
-    if (!title || !courseCode || !sisId || !description || !term || !teachers) {
+    if (!title || !sisId) {
       res.status(400).json({
         success: false,
         error: "Please provide all required fields",
-      });
-      return;
-    }
-
-    // Validate that the term exists
-    const termDoc = await Term.findById(term);
-    if (!termDoc) {
-      res.status(400).json({
-        success: false,
-        error: "Invalid term ID",
       });
       return;
     }
@@ -173,9 +167,9 @@ export const updateCourse = async (
     }
 
     // Prevent updating unique fields if they already exist
-    if (req.body.courseCode || req.body.sisId) {
+    if (req.body.sisId) {
       const existingCourse = await Course.findOne({
-        $or: [{ courseCode: req.body.courseCode }, { sisId: req.body.sisId }],
+        $or: [{ sisId: req.body.sisId }],
         _id: { $ne: req.params.id },
       });
 

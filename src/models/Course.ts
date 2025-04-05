@@ -4,7 +4,6 @@ import Term, { ITerm } from "./Term";
 
 export interface ICourse extends Document {
   title: string;
-  courseCode: string;
   sisId: string;
   description: string;
   term: Types.ObjectId | ITerm;
@@ -30,13 +29,6 @@ const courseSchema = new Schema<ICourse>(
       trim: true,
       maxlength: 100,
     },
-    courseCode: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      uppercase: true,
-    },
     sisId: {
       type: String,
       required: true,
@@ -45,14 +37,13 @@ const courseSchema = new Schema<ICourse>(
     },
     description: {
       type: String,
-      required: true,
       trim: true,
       maxlength: 1000,
     },
     term: {
       type: Schema.Types.ObjectId,
       ref: "Term",
-      required: true,
+      default: null,
     },
     accessFrom: {
       type: Date,
@@ -79,7 +70,6 @@ const courseSchema = new Schema<ICourse>(
       {
         type: Schema.Types.ObjectId,
         ref: "User",
-        required: true,
       },
     ],
     teachingAssistants: [
@@ -103,7 +93,6 @@ const courseSchema = new Schema<ICourse>(
 );
 
 // Indexes for better query performance
-courseSchema.index({ courseCode: 1 }, { unique: true });
 courseSchema.index({ sisId: 1 }, { unique: true });
 courseSchema.index({ isPublished: 1 });
 courseSchema.index({ isArchived: 1 });
