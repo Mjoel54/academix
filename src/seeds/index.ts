@@ -37,14 +37,20 @@ const seedDatabase = async () => {
     ) as IUser;
 
     // Prepare courses with user relationships and assignments
-    const preparedCourses = courseSeeds.map((course) => ({
-      ...course,
-      teachers: teacher ? [teacher._id] : [],
-      students: student ? [student._id] : [],
-      assignments:
-        assignmentSeeds[course.courseCode as keyof typeof assignmentSeeds] ||
-        [],
-    }));
+    const preparedCourses = courseSeeds.map((course) => {
+      // Extract the assignment lookup key from sisId (e.g., "CS101-2024-SPRING" => "CS101")
+      const assignmentLookupKey = course.sisId.split("-")[0];
+
+      return {
+        ...course,
+        teachers: teacher ? [teacher._id] : [],
+        students: student ? [student._id] : [],
+        assignments:
+          assignmentSeeds[
+            assignmentLookupKey as keyof typeof assignmentSeeds
+          ] || [],
+      };
+    });
 
     // Insert courses
     const courses = await Course.create(preparedCourses);

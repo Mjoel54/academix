@@ -4,7 +4,6 @@ import { ITerm } from "../models/Term";
 
 export interface ICourseSeed {
   title: string;
-  courseCode: string;
   sisId: string;
   description: string;
   term: Types.ObjectId | ITerm;
@@ -24,7 +23,6 @@ export interface ICourseSeed {
 export const courseSeeds: ICourseSeed[] = [
   {
     title: "Introduction to Programming",
-    courseCode: "CS101",
     sisId: "CS101-2024-SPRING",
     description: "Learn the fundamentals of programming using JavaScript",
     term: new Types.ObjectId(), // This will be replaced with actual term ID during seeding
@@ -40,7 +38,6 @@ export const courseSeeds: ICourseSeed[] = [
   },
   {
     title: "Advanced Mathematics",
-    courseCode: "MATH301",
     sisId: "MATH301-2024-SPRING",
     description:
       "Advanced topics in mathematics including calculus and linear algebra",
@@ -57,7 +54,6 @@ export const courseSeeds: ICourseSeed[] = [
   },
   {
     title: "Art History: Renaissance to Modern",
-    courseCode: "ART201",
     sisId: "ART201-2024-SPRING",
     description: "Survey of art history from the Renaissance to modern times",
     term: new Types.ObjectId(), // This will be replaced with actual term ID during seeding
