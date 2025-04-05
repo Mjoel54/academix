@@ -91,6 +91,7 @@ export const createAssignment = async (
 ): Promise<void> => {
   try {
     const courseId = req.params.courseId;
+
     const course = await Course.findById(courseId);
 
     if (!course) {
@@ -103,8 +104,6 @@ export const createAssignment = async (
 
     const newAssignment: IAssignment = {
       ...req.body,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
     course.assignments.push(newAssignment);
@@ -159,7 +158,6 @@ export const updateAssignment = async (
 
     Object.assign(assignment, {
       ...req.body,
-      updatedAt: new Date(),
     });
 
     await course.save();

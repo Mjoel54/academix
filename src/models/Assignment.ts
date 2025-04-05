@@ -1,13 +1,11 @@
-import { Schema } from "mongoose";
+import { Schema, Document } from "mongoose";
 
-export interface IAssignment {
+export interface IAssignment extends Document {
   title: string;
   description: string;
   dueDate: Date;
   totalPoints: number;
   isPublished: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const assignmentSchema = new Schema<IAssignment>(
@@ -42,6 +40,3 @@ export const assignmentSchema = new Schema<IAssignment>(
     timestamps: true,
   }
 );
-
-// Indexes for better query performance
-assignmentSchema.index({ dueDate: 1 });
