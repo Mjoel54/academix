@@ -30,14 +30,11 @@ export const createUser = async (
       return;
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // Create user input data
     const userDataObject = {
-      name,
+      name: name,
       email: email.toLowerCase(),
-      password: hashedPassword,
+      password: password, // The password will be hashed by the pre-save hook
       isAdmin: isAdmin || false,
       isActive: true,
     };
