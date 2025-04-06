@@ -365,17 +365,24 @@ Response:
 
 Retrieve a specific assignment.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | Unique identifier of the course |
+| assignmentId | string | Yes | Unique identifier of the assignment |
+
 Response:
 
 ```json
 {
-  "assignment": {
-    "id": "string",
-    "title": "string",
+  "success": true,
+  "data": {
+    "name": "string",
     "description": "string",
     "dueDate": "date",
-    "courseId": "string",
-    "totalPoints": "number",
+    "totalPoints": number,
+    "isPublished": boolean,
+    "_id": "string",
     "createdAt": "date",
     "updatedAt": "date"
   }
