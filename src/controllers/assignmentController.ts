@@ -155,6 +155,16 @@ export const updateAssignment = async (
 ): Promise<void> => {
   try {
     const { courseId, assignmentId } = req.params;
+
+    // Validate request parameters
+    if (!courseId || !assignmentId) {
+      res.status(400).json({
+        success: false,
+        error: "Bad request",
+      });
+      return;
+    }
+
     const course = await Course.findById(courseId);
 
     if (!course) {

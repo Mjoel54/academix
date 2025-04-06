@@ -393,30 +393,36 @@ Response:
 
 Update a specific assignment.
 
-Request Body:
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | Unique identifier of the course |
+| assignmentId | string | Yes | Unique identifier of the assignment |
 
-```json
-{
-  "title": "string",
-  "description": "string",
-  "dueDate": "date",
-  "totalPoints": "number"
-}
-```
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | No | Updated name of the assignment |
+| description | string | No | Updated description of the assignment |
+| dueDate | date | No | Updated due date for the assignment (ISO 8601 format) |
+| totalPoints | number | No | Updated maximum points possible for the assignment |
+| isPublished | boolean | No | Updated publication status of the assignment |
 
 Response:
 
 ```json
 {
-  "assignment": {
-    "id": "string",
-    "title": "string",
-    "description": "string",
-    "dueDate": "date",
-    "courseId": "string",
-    "totalPoints": "number",
-    "updatedAt": "date"
-  }
+    "success": true,
+    "data": {
+        "name": "string",
+        "description": "string",
+        "dueDate": "date",
+        "totalPoints": number,
+        "isPublished": boolean,
+        "_id": "string",
+        "createdAt": "date",
+        "updatedAt": "date"
+    }
 }
 ```
 
