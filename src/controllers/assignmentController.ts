@@ -91,6 +91,15 @@ export const createAssignment = async (
 ): Promise<void> => {
   try {
     const courseId = req.params.courseId;
+    const { name, description, dueDate, totalPoints, isPublished } = req.body;
+
+    // Validate required fields
+    if (!name || !dueDate || !totalPoints) {
+      res.status(400).json({
+        success: false,
+        message: "Provide all required fields",
+      });
+    }
 
     const course = await Course.findById(courseId);
 

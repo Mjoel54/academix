@@ -1,7 +1,7 @@
 import { Schema, Document } from "mongoose";
 
 export interface IAssignment extends Document {
-  title: string;
+  name: string;
   description: string;
   dueDate: Date;
   totalPoints: number;
@@ -10,7 +10,7 @@ export interface IAssignment extends Document {
 
 export const assignmentSchema = new Schema<IAssignment>(
   {
-    title: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -18,7 +18,6 @@ export const assignmentSchema = new Schema<IAssignment>(
     },
     description: {
       type: String,
-      required: true,
       trim: true,
       maxlength: 2000,
     },

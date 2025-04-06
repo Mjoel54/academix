@@ -337,22 +337,24 @@ URL Parameters:
 Request Body Parameters:
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| title | string | Yes | Title of the assignment (max: 100 characters) |
-| description | string | Yes | Detailed description of the assignment |
+| name | string | Yes | Name of the assignment (max: 200 characters) |
+| description | string | No | Detailed description of the assignment (max: 2000 characters) |
 | dueDate | date | Yes | Due date for the assignment (ISO 8601 format) |
 | totalPoints | number | Yes | Maximum points possible for the assignment |
+| isPublished | boolean | No | Whether the assignment is published (default: false) |
 
 Response:
 
 ```json
 {
-  "assignment": {
-    "id": "string",
-    "title": "string",
+  "success": true,
+  "data": {
+    "name": "string",
     "description": "string",
     "dueDate": "date",
-    "courseId": "string",
-    "totalPoints": "number",
+    "totalPoints": number,
+    "isPublished": boolean,
+    "_id": "string",
     "createdAt": "date",
     "updatedAt": "date"
   }
