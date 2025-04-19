@@ -430,12 +430,18 @@ Response:
 
 Delete a specific assignment.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | Unique identifier of the course |
+| assignmentId | string | Yes | Unique identifier of the assignment |
+
 Response:
 
 ```json
 {
-  "message": "Assignment successfully deleted",
-  "assignmentId": "string"
+  "success": true,
+  "message": "Assignment deleted successfully"
 }
 ```
 
