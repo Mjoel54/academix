@@ -44,6 +44,16 @@ export const getAssignmentById = async (
 ): Promise<void> => {
   try {
     const { courseId, assignmentId } = req.params;
+
+    // Validate request parameters
+    if (!courseId || !assignmentId) {
+      res.status(400).json({
+        success: false,
+        error: "Bad request",
+      });
+      return;
+    }
+
     const course = await Course.findById(courseId);
 
     if (!course) {
@@ -91,6 +101,16 @@ export const createAssignment = async (
 ): Promise<void> => {
   try {
     const courseId = req.params.courseId;
+    const { name, description, dueDate, totalPoints, isPublished } = req.body;
+
+    // Validate required fields
+    if (!name || !dueDate || !totalPoints) {
+      res.status(400).json({
+        success: false,
+        message: "Provide all required fields",
+      });
+    }
+
     const course = await Course.findById(courseId);
 
     if (!course) {
@@ -103,8 +123,6 @@ export const createAssignment = async (
 
     const newAssignment: IAssignment = {
       ...req.body,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
     course.assignments.push(newAssignment);
@@ -137,6 +155,16 @@ export const updateAssignment = async (
 ): Promise<void> => {
   try {
     const { courseId, assignmentId } = req.params;
+
+    // Validate request parameters
+    if (!courseId || !assignmentId) {
+      res.status(400).json({
+        success: false,
+        error: "Bad request",
+      });
+      return;
+    }
+
     const course = await Course.findById(courseId);
 
     if (!course) {
@@ -159,7 +187,6 @@ export const updateAssignment = async (
 
     Object.assign(assignment, {
       ...req.body,
-      updatedAt: new Date(),
     });
 
     await course.save();
@@ -191,6 +218,16 @@ export const deleteAssignment = async (
 ): Promise<void> => {
   try {
     const { courseId, assignmentId } = req.params;
+
+    // Validate request parameters
+    if (!courseId || !assignmentId) {
+      res.status(400).json({
+        success: false,
+        error: "Bad request",
+      });
+      return;
+    }
+
     const course = await Course.findById(courseId);
 
     if (!course) {

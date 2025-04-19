@@ -337,22 +337,24 @@ URL Parameters:
 Request Body Parameters:
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| title | string | Yes | Title of the assignment (max: 100 characters) |
-| description | string | Yes | Detailed description of the assignment |
+| name | string | Yes | Name of the assignment (max: 200 characters) |
+| description | string | No | Detailed description of the assignment (max: 2000 characters) |
 | dueDate | date | Yes | Due date for the assignment (ISO 8601 format) |
 | totalPoints | number | Yes | Maximum points possible for the assignment |
+| isPublished | boolean | No | Whether the assignment is published (default: false) |
 
 Response:
 
 ```json
 {
-  "assignment": {
-    "id": "string",
-    "title": "string",
+  "success": true,
+  "data": {
+    "name": "string",
     "description": "string",
     "dueDate": "date",
-    "courseId": "string",
-    "totalPoints": "number",
+    "totalPoints": number,
+    "isPublished": boolean,
+    "_id": "string",
     "createdAt": "date",
     "updatedAt": "date"
   }
@@ -363,17 +365,24 @@ Response:
 
 Retrieve a specific assignment.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | Unique identifier of the course |
+| assignmentId | string | Yes | Unique identifier of the assignment |
+
 Response:
 
 ```json
 {
-  "assignment": {
-    "id": "string",
-    "title": "string",
+  "success": true,
+  "data": {
+    "name": "string",
     "description": "string",
     "dueDate": "date",
-    "courseId": "string",
-    "totalPoints": "number",
+    "totalPoints": number,
+    "isPublished": boolean,
+    "_id": "string",
     "createdAt": "date",
     "updatedAt": "date"
   }
@@ -384,30 +393,36 @@ Response:
 
 Update a specific assignment.
 
-Request Body:
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | Unique identifier of the course |
+| assignmentId | string | Yes | Unique identifier of the assignment |
 
-```json
-{
-  "title": "string",
-  "description": "string",
-  "dueDate": "date",
-  "totalPoints": "number"
-}
-```
+Request Body Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | No | Updated name of the assignment |
+| description | string | No | Updated description of the assignment |
+| dueDate | date | No | Updated due date for the assignment (ISO 8601 format) |
+| totalPoints | number | No | Updated maximum points possible for the assignment |
+| isPublished | boolean | No | Updated publication status of the assignment |
 
 Response:
 
 ```json
 {
-  "assignment": {
-    "id": "string",
-    "title": "string",
-    "description": "string",
-    "dueDate": "date",
-    "courseId": "string",
-    "totalPoints": "number",
-    "updatedAt": "date"
-  }
+    "success": true,
+    "data": {
+        "name": "string",
+        "description": "string",
+        "dueDate": "date",
+        "totalPoints": number,
+        "isPublished": boolean,
+        "_id": "string",
+        "createdAt": "date",
+        "updatedAt": "date"
+    }
 }
 ```
 
@@ -415,12 +430,18 @@ Response:
 
 Delete a specific assignment.
 
+URL Parameters:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| courseId | string | Yes | Unique identifier of the course |
+| assignmentId | string | Yes | Unique identifier of the assignment |
+
 Response:
 
 ```json
 {
-  "message": "Assignment successfully deleted",
-  "assignmentId": "string"
+  "success": true,
+  "message": "Assignment deleted successfully"
 }
 ```
 
